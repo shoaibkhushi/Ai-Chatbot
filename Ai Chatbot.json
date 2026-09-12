@@ -1,0 +1,226 @@
+{
+  "name": "Ai Chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "f83905fc-60c0-4ad6-bbd3-90888592ac4d",
+      "name": "When chat message received",
+      "webhookId": "54fd5810-7e3e-48f7-9972-c75ff7a47b18"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "use SerpApi tool\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f70a1656-4f3a-45a3-8d87-47a927928639",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "6a120976-7a12-4207-a2e4-5336520e84d2",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mwS1vMBUUYCRRTdI",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        208
+      ],
+      "id": "4e99deae-3f3e-4b5e-85ff-d13982b71e5f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', ``, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        368,
+        208
+      ],
+      "id": "bb389377-fcd9-4dce-9845-91b72d19ded2",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "aTWnAnWgHFPB3TDj",
+          "name": "SerpApi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1181660941701970",
+        "recipientPhoneNumber": "=0329099793",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        0
+      ],
+      "id": "fa35b555-b373-4217-9b0f-63c1442c2590",
+      "name": "Send message and wait for response",
+      "webhookId": "861c2722-83a6-42e5-8a1d-1c736ad1cecb",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "vy4EjGNfPHEhC5tG",
+          "name": "WhatsApp account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1JsGW-T8plotbyRECCMnZ5cRN4yCoFTJAz-jF_h0CrxU",
+          "mode": "list",
+          "cachedResultName": "Courses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JsGW-T8plotbyRECCMnZ5cRN4yCoFTJAz-jF_h0CrxU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JsGW-T8plotbyRECCMnZ5cRN4yCoFTJAz-jF_h0CrxU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        208
+      ],
+      "id": "93a17348-d62a-432f-a4b1-2b20971c9920",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PcMnHxcXfoLjaYYb",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1acf3404-2b24-4f20-89f8-4d6319c48c36",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f6408278ff6a8c1b4122d62e8c52ec34102a8987f5c17bdfbdfc92f19bfef97e"
+  },
+  "nodeGroups": [],
+  "id": "cVej4tgqxyO96brt",
+  "tags": []
+}
